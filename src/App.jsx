@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiArrowRight, FiPlay, FiMail, FiChevronUp } from 'react-icons/fi';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -6,7 +6,7 @@ import { Autoplay, EffectFade } from 'swiper/modules';
 import Lenis from 'lenis';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
-import { portfolioData, skills, services, processSteps, testimonials } from './data/portfolioData';
+import { featuredShowcase, portfolioData, skills, services, processSteps, testimonials } from './data/portfolioData';
 import { Canvas } from '@react-three/fiber';
 import { Environment } from '@react-three/drei';
 import HeroScene from './components/HeroScene';
@@ -151,14 +151,8 @@ function App() {
 
         <section id="about" className="px-6 py-24 lg:px-8">
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.85fr_1.15fr]">
-            <motion.div initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.25 }} className="glass-panel overflow-hidden p-4">
-              <div className="relative h-[480px] overflow-hidden rounded-[1.6rem] border border-white/10 bg-gradient-to-br from-fuchsia-700/35 via-violet-900/20 to-cyan-700/25">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.2),transparent_30%)]" />
-                <div className="absolute bottom-8 left-8 right-8 h-24 rounded-full bg-cyan-400/10 blur-3xl" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="h-56 w-56 rounded-full border border-white/20 bg-white/10 shadow-[0_0_100px_rgba(124,58,237,0.25)] backdrop-blur-xl" />
-                </div>
-              </div>
+            <motion.div initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.25 }} className="overflow-hidden p-4">
+              <ProfilePortrait />
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.25 }} className="flex flex-col justify-center">
               <p className="mb-4 text-sm uppercase tracking-[0.35em] text-cyan-300">About Me</p>
@@ -201,19 +195,11 @@ function App() {
               {portfolioData.map((project, index) => (
                 <TiltCard key={project.title}>
                   <motion.article initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ delay: index * 0.08 }} className="glass-panel group overflow-hidden">
-                    <div className="relative aspect-[4/3] overflow-hidden">
-                      <img src={project.image} alt={project.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-110" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                      <button onClick={() => setSelectedProject(project)} className="absolute inset-0 flex items-center justify-center">
-                        <div className="rounded-full border border-white/20 bg-white/10 p-4 backdrop-blur-xl transition group-hover:scale-110">
-                          <FiPlay className="text-2xl text-white" />
-                        </div>
-                      </button>
-                    </div>
+                    <ProjectPreviewCard project={project} onSelect={() => setSelectedProject(project)} />
                     <div className="p-6">
                       <div className="mb-3 flex items-center justify-between text-sm text-white/55">
                         <span>{project.category}</span>
-                        <span>{project.duration}</span>
+                        <span>{project.orientation}</span>
                       </div>
                       <h3 className="mb-3 text-2xl font-semibold">{project.title}</h3>
                       <p className="mb-4 text-white/65">{project.description}</p>
@@ -236,15 +222,48 @@ function App() {
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(124,58,237,0.25),_transparent_40%)]" />
               <div className="relative grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
                 <div>
-                  <p className="mb-3 text-sm uppercase tracking-[0.35em] text-cyan-300">Featured Sample Video</p>
-                  <h2 className="mb-4 font-display text-3xl sm:text-4xl">A premium cinematic showcase for motion-first brands.</h2>
-                  <p className="max-w-xl text-lg leading-8 text-white/70">Every beat, transition, and color decision is built to feel elevated, intentional, and cinematic from the very first frame.</p>
+                  <p className="mb-3 text-sm uppercase tracking-[0.35em] text-cyan-300">Featured Showcase</p>
+                  <h2 className="mb-4 font-display text-3xl sm:text-4xl">{featuredShowcase.title}</h2>
+                  <p className="max-w-xl text-lg leading-8 text-white/70">{featuredShowcase.description}</p>
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    {featuredShowcase.software.map((item) => (
+                      <span key={item} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/70">{item}</span>
+                    ))}
+                  </div>
                 </div>
-                <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/40 p-4">
-                  <img src="https://images.unsplash.com/photo-1517602302552-471fe67acf66?auto=format&fit=crop&w=1400&q=80" alt="Showcase" className="h-[360px] w-full rounded-[1.5rem] object-cover" />
-                  <button onClick={() => setSelectedVideo(true)} className="absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-white/10 backdrop-blur-xl transition hover:scale-110">
-                    <FiPlay className="text-3xl text-white" />
-                  </button>
+                <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/20 p-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    onMouseMove={(event) => {
+                      const rect = event.currentTarget.getBoundingClientRect();
+                      const x = (event.clientX - rect.left) / rect.width - 0.5;
+                      const y = (event.clientY - rect.top) / rect.height - 0.5;
+                      event.currentTarget.style.setProperty('--rx', `${y * 4}deg`);
+                      event.currentTarget.style.setProperty('--ry', `${x * 4}deg`);
+                    }}
+                    onMouseLeave={(event) => {
+                      event.currentTarget.style.setProperty('--rx', '0deg');
+                      event.currentTarget.style.setProperty('--ry', '0deg');
+                    }}
+                    whileHover={{ scale: 1.01, y: -4, rotateX: -2, rotateY: 2 }}
+                    transition={{ type: 'spring', stiffness: 140, damping: 16 }}
+                    className="relative h-[360px] overflow-hidden rounded-[1.5rem] border border-white/10 bg-transparent"
+                    style={{ transformStyle: 'preserve-3d', rotateX: 'var(--rx, 0deg)', rotateY: 'var(--ry, 0deg)' }}
+                  >
+                    <img src="/image/cinematic-thumbnail.png" alt="Cinematic Storytelling Showcase" loading="lazy" className="h-full w-full rounded-[1.4rem] object-cover" />
+                    <div className="absolute inset-0 rounded-[1.4rem] bg-gradient-to-t from-black/60 via-black/10 to-white/10" />
+                    <div className="absolute inset-0 rounded-[1.4rem] bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.14),_transparent_45%)]" />
+                    <div className="absolute inset-0 rounded-[1.4rem] bg-[linear-gradient(110deg,transparent_0%,rgba(255,255,255,0.16)_35%,transparent_70%)]" />
+                    <div className="absolute inset-x-4 bottom-4 h-16 rounded-full bg-cyan-400/10 blur-3xl" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <motion.div whileHover={{ scale: 1.08 }} className="rounded-full border border-white/20 bg-white/10 p-4 backdrop-blur-xl">
+                        <FiPlay className="text-2xl text-white" />
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                  <button onClick={() => setSelectedVideo(featuredShowcase)} className="absolute inset-0" aria-label="Play featured showcase" />
                 </div>
               </div>
             </motion.div>
@@ -350,7 +369,7 @@ function App() {
         {selectedProject && <Modal onClose={() => setSelectedProject(null)} project={selectedProject} />}
       </AnimatePresence>
       <AnimatePresence>
-        {selectedVideo && <VideoModal onClose={() => setSelectedVideo(null)} />}
+        {selectedVideo && <VideoModal onClose={() => setSelectedVideo(null)} project={selectedVideo} />}
       </AnimatePresence>
     </div>
   );
@@ -417,15 +436,122 @@ function TiltCard({ children }) {
   );
 }
 
+function ProfilePortrait() {
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const onMove = (event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ x: y * 4, y: x * 4 });
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      onMouseMove={onMove}
+      onMouseLeave={() => {
+        setTilt({ x: 0, y: 0 });
+        setIsHovered(false);
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      whileHover={{ scale: 1.01, rotateX: -2, rotateY: 2, y: -3 }}
+      transition={{ type: 'spring', stiffness: 140, damping: 16 }}
+      style={{ transformStyle: 'preserve-3d', rotateX: tilt.x, rotateY: tilt.y }}
+      className="relative h-[480px] overflow-hidden rounded-[1.6rem] border border-transparent bg-transparent p-0 sm:p-0"
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(56,189,248,0.1),transparent_45%)]" />
+      <div className="absolute left-8 top-8 h-24 w-24 rounded-full bg-cyan-400/12 blur-3xl" />
+      <div className="absolute bottom-8 right-6 h-32 w-32 rounded-full bg-fuchsia-500/12 blur-3xl" />
+      <div className="absolute left-1/2 top-1/2 h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10 bg-white/5 blur-3xl" />
+      <div className="absolute inset-0 overflow-hidden rounded-[1.3rem]">
+        <div className="absolute inset-0 bg-[linear-gradient(110deg,transparent_0%,rgba(255,255,255,0.12)_35%,transparent_70%)] transition-transform duration-700" style={{ transform: isHovered ? 'translateX(120%)' : 'translateX(-120%)' }} />
+        <div className="absolute left-4 top-4 h-12 w-12 rounded-full border border-cyan-300/15 bg-white/5 backdrop-blur-sm" />
+        <div className="absolute bottom-4 right-4 h-14 w-14 rounded-full border border-fuchsia-300/15 bg-white/5 backdrop-blur-sm" />
+      </div>
+      <motion.div animate={{ y: [0, -6, 0], rotate: [0, 0.7, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }} className="relative z-10 flex h-full items-center justify-center">
+        <div className="relative h-[92%] w-[92%] overflow-hidden rounded-[1.2rem] border border-white/10 bg-transparent p-0 shadow-[0_0_50px_rgba(56,189,248,0.08)]">
+          <img src="/image/profile.jpeg" alt="Siladitya Jana" loading="lazy" className="h-full w-full rounded-[1.1rem] object-cover object-center" />
+          <div className="absolute inset-0 rounded-[1.1rem] border border-white/10" />
+          <div className="absolute inset-x-4 bottom-4 h-16 rounded-full bg-cyan-400/8 blur-3xl" />
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function ProjectPreviewCard({ project, onSelect }) {
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const onMove = (event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ x: y * 6, y: x * 6 });
+  };
+
+  const isPortrait = project.orientation === 'Portrait';
+  const previewImage = project.thumbnail || `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1600" viewBox="0 0 1200 1600"><rect width="1200" height="1600" rx="48" fill="#050816"/><rect x="32" y="32" width="1136" height="1536" rx="36" fill="url(#g)"/><rect x="0" y="0" width="1200" height="1600" fill="rgba(255,255,255,0.05)"/><circle cx="900" cy="360" r="220" fill="rgba(56,189,248,0.22)"/><circle cx="320" cy="1210" r="280" fill="rgba(168,85,247,0.22)"/><path d="M470 520h260v560H470z" fill="rgba(255,255,255,0.12)"/><path d="M470 520l220 200-220 200z" fill="rgba(255,255,255,0.32)"/><text x="600" y="1320" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="58" fill="white">${project.title}</text></svg>`)} `;
+
+  return (
+    <motion.div
+      onMouseMove={onMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setTilt({ x: 0, y: 0 });
+        setIsHovered(false);
+      }}
+      whileHover={{ scale: 1.03, rotateX: -2.5, rotateY: 2.5, y: -5 }}
+      transition={{ type: 'spring', stiffness: 140, damping: 16 }}
+      style={{ transformStyle: 'preserve-3d', rotateX: tilt.x, rotateY: tilt.y }}
+      className="relative overflow-hidden"
+    >
+      <div className={`relative overflow-hidden ${isPortrait ? 'mx-auto max-w-[220px]' : 'mx-auto max-w-[320px]'}`}>
+        <div className={`relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-transparent p-2 shadow-[0_0_45px_rgba(0,0,0,0.2)] ${isPortrait ? 'aspect-[9/16]' : 'aspect-video'}`}>
+          {isPortrait ? (
+            <div className="absolute inset-x-3 top-2 h-3 rounded-full bg-white/10" />
+          ) : (
+            <div className="absolute inset-x-5 top-3 h-3 rounded-full bg-white/10" />
+          )}
+          <div className={`relative h-full w-full overflow-hidden rounded-[1.08rem] border border-white/10 ${isPortrait ? 'rounded-[1.25rem]' : 'rounded-[1.1rem]'}`}>
+            <img src={previewImage} alt={project.title} loading="lazy" className="h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-white/10" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.12),_transparent_45%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(110deg,transparent_0%,rgba(255,255,255,0.16)_35%,transparent_70%)] transition-transform duration-700" style={{ transform: isHovered ? 'translateX(140%)' : 'translateX(-140%)' }} />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(168,85,247,0.08),_transparent_55%)]" />
+            <button onClick={onSelect} className="absolute inset-0 flex items-center justify-center">
+              <motion.div whileHover={{ scale: 1.12, y: -2 }} className="rounded-full border border-white/20 bg-white/10 p-4 backdrop-blur-xl">
+                <FiPlay className="text-2xl text-white" />
+              </motion.div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 function Modal({ project, onClose }) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 px-4 py-8 backdrop-blur-xl">
       <motion.div initial={{ y: 24, scale: 0.98 }} animate={{ y: 0, scale: 1 }} exit={{ y: 24, scale: 0.98 }} className="glass-panel relative w-full max-w-4xl overflow-hidden">
         <button onClick={onClose} className="absolute right-4 top-4 z-10 rounded-full border border-white/10 bg-black/40 px-3 py-2 text-sm">Close</button>
         <div className="aspect-video w-full bg-black">
-          <iframe className="h-full w-full" src={project.videoUrl} title={project.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+          {project.videoType === 'youtube' ? (
+            <iframe className="h-full w-full" src={project.videoUrl} title={project.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+          ) : (
+            <video className="h-full w-full object-contain" src={project.videoUrl} controls autoPlay playsInline />
+          )}
         </div>
         <div className="p-8">
+          <div className="mb-3 flex items-center justify-between text-sm text-white/55">
+            <span>{project.category}</span>
+            <span>{project.orientation || project.platform}</span>
+          </div>
           <h3 className="text-3xl font-semibold">{project.title}</h3>
           <p className="mt-4 text-white/70">{project.description}</p>
           <div className="mt-6 flex flex-wrap gap-2">
@@ -439,13 +565,22 @@ function Modal({ project, onClose }) {
   );
 }
 
-function VideoModal({ onClose }) {
+function VideoModal({ project, onClose }) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[80] flex items-center justify-center bg-black/85 px-4 py-8 backdrop-blur-xl">
       <motion.div initial={{ y: 24, scale: 0.98 }} animate={{ y: 0, scale: 1 }} exit={{ y: 24, scale: 0.98 }} className="glass-panel relative w-full max-w-5xl overflow-hidden">
         <button onClick={onClose} className="absolute right-4 top-4 z-10 rounded-full border border-white/10 bg-black/40 px-3 py-2 text-sm">Close</button>
         <div className="aspect-video w-full bg-black">
-          <iframe className="h-full w-full" src="https://www.youtube.com/embed/ScMzIvxBSi4" title="Featured video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+          <iframe className="h-full w-full" src={project.videoUrl} title={project.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+        </div>
+        <div className="p-8">
+          <h3 className="text-3xl font-semibold">{project.title}</h3>
+          <p className="mt-4 text-white/70">{project.description}</p>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {project.software.map((item) => (
+              <span key={item} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/70">{item}</span>
+            ))}
+          </div>
         </div>
       </motion.div>
     </motion.div>
