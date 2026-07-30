@@ -29,23 +29,19 @@ export const portfolioData = [
 ];
 
 export const skills = [
-  { name: 'Premiere Pro', icon: '🎬', level: 95 },
-  { name: 'DaVinci Resolve', icon: '🎞️', level: 93 },
-  { name: 'Lightroom', icon: '📸', level: 90 },
-  { name: 'After Effects', icon: '✨', level: 88 },
-  { name: 'Photoshop', icon: '🖼️', level: 86 },
-  { name: 'Color Grading', icon: '🌈', level: 94 },
-  { name: 'Motion Graphics', icon: '⚡', level: 89 },
-  { name: 'Short-form Editing', icon: '📱', level: 97 },
+  { name: 'Premiere Pro', icon: '🎬', description: 'Sharp pacing, polished transitions, and cinematic structure for premium edits.' },
+  { name: 'Lightroom', icon: '📸', description: 'Clean color refinement and polished finishing for a refined visual tone.' },
+  { name: 'Photoshop', icon: '🖼️', description: 'Precise retouching and layered compositing for standout visual assets.' },
+  { name: 'Color Grading', icon: '🌈', description: 'Mood-led toning and cinematic color treatment that elevates every frame.' },
+  { name: 'Short-form Video Editing', icon: '📱', description: 'Fast, attention-grabbing edits tailored for Reels, Shorts, and social-first audiences.' },
 ];
 
 export const services = [
   'Social Media Editing',
-  'YouTube Editing',
-  'Reels',
+  'YouTube Video Editing',
+  'Instagram Reels / Shorts Editing',
   'Color Grading',
   'Photo Editing',
-  'Motion Graphics',
 ];
 
 export const processSteps = [

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiArrowRight, FiPlay, FiMail, FiInstagram, FiLinkedin, FiGithub, FiMessageCircle, FiChevronUp } from 'react-icons/fi';
+import { FiArrowRight, FiPlay, FiMail, FiChevronUp } from 'react-icons/fi';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade } from 'swiper/modules';
 import Lenis from 'lenis';
@@ -128,19 +128,6 @@ function App() {
                   Contact Me
                 </MagneticButton>
               </div>
-
-              <div className="grid gap-4 sm:grid-cols-3">
-                {[
-                  { label: 'Projects', value: '120+' },
-                  { label: 'Reels', value: '250+' },
-                  { label: 'Global Clients', value: '40+' },
-                ].map((stat) => (
-                  <div key={stat.label} className="glass-panel rounded-[1.4rem] p-4">
-                    <div className="text-2xl font-semibold text-white">{stat.value}</div>
-                    <div className="mt-1 text-sm text-white/60">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
             </motion.div>
 
             <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, delay: 0.1 }} className="relative h-[520px] rounded-[2rem] border border-white/10 bg-white/5 p-4 shadow-[0_0_70px_rgba(124,58,237,0.14)] backdrop-blur-2xl">
@@ -177,19 +164,6 @@ function App() {
               <p className="mb-4 text-sm uppercase tracking-[0.35em] text-cyan-300">About Me</p>
               <h2 className="mb-6 max-w-2xl font-display text-4xl sm:text-5xl">I blend cinematic craft with fast-moving creator intuition.</h2>
               <p className="max-w-2xl text-lg leading-8 text-white/70">Siladitya Jana creates premium edits that feel tactile, elegant, and built for the modern attention economy — from cinematic narrative films to sharp social-first campaigns.</p>
-              <div className="mt-8 grid gap-4 sm:grid-cols-4">
-                {[
-                  { label: 'Projects', value: '120+' },
-                  { label: 'Videos Edited', value: '250+' },
-                  { label: 'Years', value: '6+' },
-                  { label: 'Clients', value: '40+' },
-                ].map((item) => (
-                  <div key={item.label} className="glass-panel p-4 text-center">
-                    <div className="text-2xl font-semibold text-white">{item.value}</div>
-                    <div className="mt-1 text-sm text-white/60">{item.label}</div>
-                  </div>
-                ))}
-              </div>
             </motion.div>
           </div>
         </section>
@@ -200,18 +174,15 @@ function App() {
               <p className="mb-3 text-sm uppercase tracking-[0.35em] text-cyan-300">Skills</p>
               <h2 className="font-display text-3xl sm:text-4xl">A refined toolkit for premium motion work.</h2>
             </div>
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {skills.map((skill, index) => (
                 <TiltCard key={skill.name}>
-                  <motion.div initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ delay: index * 0.05 }} className="glass-panel relative overflow-hidden p-6">
+                  <motion.div initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ delay: index * 0.05 }} className="glass-panel relative h-full overflow-hidden p-6">
                     <div className="absolute inset-0 grid-sheen" />
-                    <div className="relative">
+                    <div className="relative flex h-full flex-col">
                       <div className="mb-4 text-3xl">{skill.icon}</div>
                       <h3 className="text-xl font-semibold">{skill.name}</h3>
-                      <div className="mt-6 h-2 rounded-full bg-white/10">
-                        <motion.div initial={{ width: 0 }} whileInView={{ width: `${skill.level}%` }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} className="h-2 rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400" />
-                      </div>
-                      <div className="mt-3 text-sm text-white/60">{skill.level}% mastery</div>
+                      <p className="mt-3 text-sm leading-7 text-white/60">{skill.description}</p>
                     </div>
                   </motion.div>
                 </TiltCard>
@@ -338,25 +309,28 @@ function App() {
         </section>
 
         <section id="contact" className="px-6 py-24 lg:px-8">
-          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-            <motion.div initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.2 }} className="glass-panel p-8 sm:p-10">
-              <p className="mb-3 text-sm uppercase tracking-[0.35em] text-cyan-300">Contact</p>
-              <h2 className="mb-4 font-display text-3xl sm:text-4xl">Let’s make something unforgettable.</h2>
-              <p className="text-lg leading-8 text-white/70">Available for selective collaborations, campaigns, and premium short-form content.</p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                {[{ icon: FiInstagram, label: 'Instagram' }, { icon: FiLinkedin, label: 'LinkedIn' }, { icon: FiGithub, label: 'GitHub' }, { icon: FiMail, label: 'Email' }, { icon: FiMessageCircle, label: 'WhatsApp' }].map((item) => (
-                  <a key={item.label} href="#" className="interactive flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70 transition hover:bg-white/10">
-                    <item.icon /> {item.label}
-                  </a>
-                ))}
+          <div className="mx-auto max-w-7xl">
+            <motion.div initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} className="glass-panel flex items-center justify-center p-8 sm:p-10 lg:p-12">
+              <div className="w-full max-w-3xl text-center">
+                <p className="mb-3 text-sm uppercase tracking-[0.35em] text-cyan-300">Contact</p>
+                <h2 className="mb-4 font-display text-3xl sm:text-4xl">Let’s make something unforgettable.</h2>
+                <p className="mx-auto max-w-2xl text-lg leading-8 text-white/70">Available for selective collaborations, campaigns, and premium short-form content.</p>
+                <motion.a href="mailto:adityacliphub@gmail.com" whileHover={{ y: -4, scale: 1.01 }} className="group relative mt-8 flex min-h-[220px] w-full items-center justify-center overflow-hidden rounded-[2rem] border border-white/10 bg-white/10 px-6 py-8 text-center backdrop-blur-2xl">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(34,211,238,0.18),_transparent_55%)]" />
+                  <motion.div animate={{ boxShadow: ['0 0 0 rgba(34,211,238,0.0)', '0 0 45px rgba(34,211,238,0.18)', '0 0 0 rgba(34,211,238,0.0)'] }} transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }} className="absolute inset-0 rounded-[2rem] border border-cyan-400/20" />
+                  <div className="relative space-y-4">
+                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-cyan-400/30 bg-white/10">
+                      <FiMail className="text-2xl text-cyan-300" />
+                    </div>
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.35em] text-cyan-300">Email</p>
+                      <h3 className="mt-2 text-2xl font-semibold text-white">adityacliphub@gmail.com</h3>
+                      <p className="mt-3 text-sm leading-7 text-white/65">For premium edits, campaigns, and cinematic short-form launches.</p>
+                    </div>
+                  </div>
+                </motion.a>
               </div>
             </motion.div>
-            <motion.form initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.2 }} className="glass-panel space-y-5 p-8 sm:p-10">
-              <input className="interactive w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 outline-none transition focus:border-cyan-400" placeholder="Name" />
-              <input className="interactive w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 outline-none transition focus:border-cyan-400" placeholder="Email" />
-              <textarea className="interactive min-h-[160px] w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 outline-none transition focus:border-cyan-400" placeholder="Message" />
-              <button className="rounded-full bg-gradient-to-r from-fuchsia-600 via-violet-600 to-cyan-500 px-6 py-3 font-semibold text-white">Send Message</button>
-            </motion.form>
           </div>
         </section>
       </main>
@@ -364,11 +338,7 @@ function App() {
       <footer className="border-t border-white/10 px-6 py-8 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 text-sm text-white/55 sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 Siladitya Jana. All rights reserved.</p>
-          <div className="flex gap-4">
-            <a href="#" className="transition hover:text-white">Instagram</a>
-            <a href="#" className="transition hover:text-white">LinkedIn</a>
-            <a href="#" className="transition hover:text-white">GitHub</a>
-          </div>
+          <a href="mailto:adityacliphub@gmail.com" className="transition hover:text-white">Email</a>
         </div>
       </footer>
 
