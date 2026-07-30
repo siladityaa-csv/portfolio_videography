@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  font-family: Inter, system-ui, sans-serif;
+  background-color: #04070d;
+  color: #f8fafc;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, rgba(124,58,237,0.16), transparent 24%), #04070d;
+  color: #f8fafc;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(124,58,237,0.35);
+  color: white;
+}
+
+.glass-panel {
+  @apply rounded-[1.75rem] border border-white/10 bg-white/5 backdrop-blur-2xl shadow-[0_0_50px_rgba(0,0,0,0.25)];
+}
+
+.grid-sheen {
+  background-image: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.08) 40%, transparent 80%);
+  background-size: 200% 100%;
+  animation: shimmer 6s linear infinite;
+}
+
+.cursor-glow {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 80;
+  transition: transform 180ms ease, opacity 180ms ease, scale 180ms ease;
+}
+
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 10px 10px;
+  opacity: 0.08;
+  mix-blend-mode: screen;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
